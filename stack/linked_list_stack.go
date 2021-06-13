@@ -52,3 +52,11 @@ func ReverseSlice(source []interface{}) []interface{} {
 	}
 	return target
 }
+
+func (l *LinkStack) IsEmpty() (result bool) {
+	result = false
+	if l.Top == nil {
+		result = true
+	}
+	return
+}
