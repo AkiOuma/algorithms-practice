@@ -6,7 +6,7 @@ import (
 )
 
 type LinkStackNode struct {
-	Data int
+	Data interface{}
 	Last *LinkStackNode
 }
 
@@ -14,7 +14,7 @@ type LinkStack struct {
 	Top *LinkStackNode
 }
 
-func (l *LinkStack) Push(data int) {
+func (l *LinkStack) Push(data interface{}) {
 	node := LinkStackNode{Data: data}
 	if l.Top != nil {
 		node.Last = l.Top
@@ -22,7 +22,7 @@ func (l *LinkStack) Push(data int) {
 	l.Top = &node
 }
 
-func (l *LinkStack) Pop() (item int, err error) {
+func (l *LinkStack) Pop() (item interface{}, err error) {
 	if l.Top == nil {
 		err = errors.New("error: stack is empty")
 		return
@@ -33,7 +33,7 @@ func (l *LinkStack) Pop() (item int, err error) {
 }
 
 func (l *LinkStack) PrintStack() {
-	arr := make([]int, 0)
+	arr := make([]interface{}, 0)
 	current := l.Top
 	for current != nil {
 		arr = append(arr, current.Data)
@@ -42,9 +42,9 @@ func (l *LinkStack) PrintStack() {
 	fmt.Println(ReverseSlice(arr))
 }
 
-func ReverseSlice(source []int) []int {
+func ReverseSlice(source []interface{}) []interface{} {
 	size := len(source)
-	target := make([]int, 0, size)
+	target := make([]interface{}, 0, size)
 	i := size - 1
 	for i >= 0 {
 		target = append(target, source[i])
