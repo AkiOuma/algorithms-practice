@@ -6,39 +6,55 @@ import (
 )
 
 type LinkedListNode struct {
-	Data int
+	Data interface{}
 	Next *LinkedListNode
 }
 
-// 创建链表
-func BuildLinkedList(data []int) LinkedListNode {
-	var head LinkedListNode
-	current := &head
+type LinkedList struct {
+	Head *LinkedListNode
+}
+
+// 初始化链表
+func (l *LinkedList) Init(data ...interface{}) {
+	var current *LinkedListNode
 	for _, v := range data {
 		node := LinkedListNode{Data: v}
-		current.Next = &node
-		current = current.Next
+		if l.Head == nil {
+			l.Head = &node
+			current = &node
+		} else {
+			current.Next = &node
+			current = current.Next
+		}
 	}
-	return head
+}
+
+// 判断链表是否为空
+func (l *LinkedList) IsEmpty() (result bool) {
+	result = false
+	if l.Head == nil {
+		result = true
+	}
+	return
 }
 
 // 打印链表
-func PrintLinkedList(head LinkedListNode) {
-	current := head.Next
+func (l *LinkedList) Print() {
 	fmt.Print("[")
+	current := l.Head
 	for current != nil {
 		fmt.Print(current.Data)
-		current = current.Next
-		if current != nil {
+		if current.Next != nil {
 			fmt.Print(" ")
 		}
+		current = current.Next
 	}
 	fmt.Println("]")
 }
 
-// 获取链表长度
-func (l *LinkedListNode) Length() (size int) {
-	current := l.Next
+// 返回链表长度
+func (l *LinkedList) Size() (size int) {
+	current := l.Head
 	for current != nil {
 		size++
 		current = current.Next
@@ -46,82 +62,95 @@ func (l *LinkedListNode) Length() (size int) {
 	return
 }
 
-// 按下标寻找链表中的数据的值
-func (l *LinkedListNode) FindKth(index int) (data int, err error) {
-	current := l.Next
-	i := 1
+// 按下标查找链表元素
+func (l *LinkedList) FindKth(index int) (data interface{}, err error) {
+	if index > l.Size()-1 {
+		err = errors.New("error: index out of range")
+		return
+	}
+	current := l.Head
+	i := 0
 	for current != nil {
-		if i == index {
+		if index == i {
 			data = current.Data
 			break
 		}
 		current = current.Next
-		if current != nil {
-			i++
-		}
-	}
-	if i < index {
-		err = errors.New("error: out of range")
+		i++
 	}
 	return
 }
 
-// 按值寻找链表中第一个符合的节点的下标
-func (l *LinkedListNode) FindValue(data int) (index int, err error) {
-	current := l.Next
-	i := 1
+// 按值查找链表元素
+func (l *LinkedList) FindValue(value interface{}) (index int, err error) {
+	current := l.Head
+	found := false
 	for current != nil {
-		if current.Data == data {
-			index = i
+		if current.Data == value {
+			found = true
 			break
 		}
+		index++
 		current = current.Next
-		i++
-		if current == nil {
-			err = errors.New("error: data not exist")
-		}
+	}
+	if !found {
+		err = errors.New("error: value not found")
 	}
 	return
 }
 
-// 在特定位置插入新的节点
-func (l *LinkedListNode) InsertNode(data int, index int) (err error) {
-	current := l
-	i := 1
+// 在特定位置插入元素
+func (l *LinkedList) Insert(index int, value interface{}) (err error) {
+	if index > l.Size() {
+		err = errors.New("error: index out of range")
+		return
+	}
+	node := LinkedListNode{Data: value}
+	i := 0
+	current := l.Head
+	// 当位置是0的时候需要特别处理
+	if index == 0 {
+		node.Next = l.Head
+		l.Head = &node
+		return
+	}
+	// 位置是非0时
 	for current != nil {
-		if i == index {
-			node := LinkedListNode{Data: data}
+		if i == index-1 {
 			node.Next = current.Next
 			current.Next = &node
 			break
 		}
-		current = current.Next
 		i++
-		if current == nil {
-			err = errors.New("error: new index out of range")
-		}
+		current = current.Next
 	}
 	return
 }
 
-// 删除一个特定位置的节点
-func (l *LinkedListNode) DeleteNode(index int) (err error) {
-	current := l
-	i := 1
-	for current.Next != nil {
-		if index == i {
-			if current.Next != nil {
-				current.Next = current.Next.Next
-			} else {
+// 删除特定位置的元素
+func (l *LinkedList) Delete(index int) (err error) {
+	if index > l.Size()-1 {
+		err = errors.New("error: index out of range")
+		return
+	}
+	current := l.Head
+	i := 0
+	// 位置为0时需要特殊处理
+	if index == 0 {
+		l.Head = l.Head.Next
+		return
+	}
+	for current != nil {
+		if i == index-1 {
+			if current.Next == nil {
 				current.Next = nil
+			} else {
+				current.Next = current.Next.Next
 			}
 			break
 		}
 		current = current.Next
 		i++
-		if current.Next == nil {
-			err = errors.New("error: index out of range")
-		}
 	}
 	return
 }
