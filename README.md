@@ -2,7 +2,9 @@
 
 ## 对应目录
 
-* 链表: /linear/linked_list.go
+* 链表
+  * 实现: /linear/linked_list.go
+  * reverse linked list: /linear/reverse_linked_list.go
 * 堆栈
   * slice实现: /stack/slice_stack.go
   * 链表实现: /stack/linked_list_stack.go
