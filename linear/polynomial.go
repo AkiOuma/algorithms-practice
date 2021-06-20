@@ -71,7 +71,7 @@ func BuildList(p []PolyArrNode) PolyLinkNode {
 	return head
 }
 
-// 使用顺序存储结构实现多项式相加
+// 使用链表了结构实现多项式相加
 func AddPolyLink(P1 []PolyArrNode, P2 []PolyArrNode) {
 	var head PolyLinkNode
 	current := &head
@@ -92,8 +92,10 @@ func AddPolyLink(P1 []PolyArrNode, P2 []PolyArrNode) {
 			ptr2 = ptr2.Next
 		default:
 			ptr1.Coef = ptr1.Coef + ptr2.Coef
-			current.Next = ptr1
-			current = ptr1
+			if ptr1.Coef != 0 {
+				current.Next = ptr1
+				current = ptr1
+			}
 			ptr1 = ptr1.Next
 			ptr2 = ptr2.Next
 		}
