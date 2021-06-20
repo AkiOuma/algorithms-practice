@@ -12,3 +12,5 @@
 * 队列
   * slice实现: /queue/slice_queue.go
   * 链表实现: /queue/linked_list_queue.go
+* 树
+  * 二分查找: /tree/binary_search.go
